@@ -22,22 +22,8 @@ msg_ok "Installed Dependencies"
 
 msg_info "Fetching Latest Bitfocus Companion Release Info"
 RELEASE_JSON=$(curl -fsSL "https://api.bitfocus.io/v1/product/companion/packages?limit=20")
-ASSET_URL=$(echo "$RELEASE_JSON" | python3 -c "
-import json, sys
-pkgs = json.load(sys.stdin)['packages']
-for p in pkgs:
-    if p['target'] == 'linux-tgz':
-        print(p['uri'])
-        break
-")
-RELEASE=$(echo "$RELEASE_JSON" | python3 -c "
-import json, sys
-pkgs = json.load(sys.stdin)['packages']
-for p in pkgs:
-    if p['target'] == 'linux-tgz':
-        print(p['version'])
-        break
-")
+RELEASE=$(echo "$RELEASE_JSON" | grep -o '"version":"[^"]*","target":"linux-tgz"' | head -1 | awk -F'"' '{print $4}')
+ASSET_URL=$(echo "$RELEASE_JSON" | grep -o '"uri":"[^"]*linux-x64[^"]*"' | head -1 | awk -F'"' '{print $4}')
 
 if [[ -z "$ASSET_URL" ]]; then
   msg_error "Could not locate a Linux x64 release from the Bitfocus API."

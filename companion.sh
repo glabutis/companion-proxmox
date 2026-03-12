@@ -26,6 +26,8 @@ var_ram="512"
 var_os="debian"
 var_version="12"
 var_unprivileged="1"
+var_nesting="1"
+var_keyctl="1"
 
 variables
 color
@@ -68,28 +70,8 @@ function update_script() {
   [[ -f /opt/companion-config/version.txt ]] && CURRENT=$(cat /opt/companion-config/version.txt)
 
   RELEASE_JSON=$(curl -fsSL "https://api.bitfocus.io/v1/product/companion/packages?limit=20")
-  LATEST=$(echo "$RELEASE_JSON" | python3 -c "
-import json, sys
-pkgs = json.load(sys.stdin)['packages']
-for p in pkgs:
-    if p['target'] == 'linux-tgz':
-        print(p['version'])
-        break
-")
-
-  if [[ "$CURRENT" == "$LATEST" ]]; then
-    msg_ok "Already running Bitfocus Companion ${LATEST} — no update needed."
-    exit
-  fi
-
-  ASSET_URL=$(echo "$RELEASE_JSON" | python3 -c "
-import json, sys
-pkgs = json.load(sys.stdin)['packages']
-for p in pkgs:
-    if p['target'] == 'linux-tgz':
-        print(p['uri'])
-        break
-")
+  LATEST=$(echo "$RELEASE_JSON" | grep -o '"version":"[^"]*","target":"linux-tgz"' | head -1 | awk -F'"' '{print $4}')
+  ASSET_URL=$(echo "$RELEASE_JSON" | grep -o '"uri":"[^"]*linux-x64[^"]*"' | head -1 | awk -F'"' '{print $4}')
 
   msg_info "Updating Bitfocus Companion to ${LATEST}"
   systemctl stop companion

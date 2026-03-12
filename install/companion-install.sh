@@ -9,9 +9,6 @@ source <(curl -s https://raw.githubusercontent.com/community-scripts/ProxmoxVE/m
 color
 verb_ip6
 catch_errors
-setting_up_container
-network_check
-update_os
 
 msg_info "Installing Dependencies"
 apt-get install -y -q \

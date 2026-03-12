@@ -91,23 +91,11 @@ start
 build_container
 description
 
-msg_info "Starting LXC Container"
-pct start "$CTID"
-msg_ok "Started LXC Container"
-
-# Run the install script inside the container.
-# Tries remote URL first (when hosted on GitHub), falls back to local file.
-INSTALL_SCRIPT_URL="https://raw.githubusercontent.com/glabutis/companion-proxmox/main/install/companion-install.sh"
-INSTALL_SCRIPT_LOCAL="$(dirname "$(realpath "$0")")/install/companion-install.sh"
-
-if curl -fsSL --head "$INSTALL_SCRIPT_URL" &>/dev/null; then
-  lxc-attach -n "$CTID" -- bash -c "$(curl -fsSL "$INSTALL_SCRIPT_URL")"
-elif [[ -f "$INSTALL_SCRIPT_LOCAL" ]]; then
-  lxc-attach -n "$CTID" -- bash -c "$(cat "$INSTALL_SCRIPT_LOCAL")"
-else
-  msg_error "Cannot find install script at URL or local path."
-  exit 1
-fi
+# build.func already created and started the container, and installed base packages.
+# It looks for install scripts only in the community-scripts repo, so we run ours now.
+msg_info "Installing Bitfocus Companion"
+pct exec "$CTID" -- bash -c "$(curl -fsSL https://raw.githubusercontent.com/glabutis/companion-proxmox/main/install/companion-install.sh)"
+msg_ok "Installed Bitfocus Companion"
 
 IP=$(pct exec "$CTID" -- hostname -I | awk '{print $1}')
 

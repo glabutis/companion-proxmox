@@ -102,4 +102,4 @@ IP=$(pct exec "$CTID" -- hostname -I | awk '{print $1}')
 msg_ok "Completed Successfully!\n"
 echo -e "${CREATING}${GN}${APP} setup has been successfully initialized!${CL}"
 echo -e "${INFO}${YW} Access Bitfocus Companion Web UI at:${CL}"
-echo -e "${TAB}${GATEWAY}${BGN}http://${IP}:8888${CL}"
+echo -e "${TAB}${GATEWAY}${BGN}http://${IP}:8000${CL}"

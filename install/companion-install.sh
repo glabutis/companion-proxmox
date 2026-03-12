@@ -59,7 +59,7 @@ Wants=network-online.target
 [Service]
 Type=simple
 User=companion
-ExecStart=/opt/companion/companion_headless.sh --config-path /opt/companion-config
+ExecStart=/opt/companion/companion_headless.sh --config-dir /opt/companion-config
 WorkingDirectory=/opt/companion
 Restart=on-failure
 RestartSec=5

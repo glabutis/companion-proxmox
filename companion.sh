@@ -88,7 +88,7 @@ function update_script() {
 }
 
 start
-build_container
+build_container 2> >(grep -v "The requested URL returned error: 404" >&2)
 description
 
 # build.func already created and started the container, and installed base packages.

@@ -80,5 +80,17 @@ msg_ok "Started Companion service"
 
 echo "${RELEASE}" >/opt/companion-config/version.txt
 
-motd_ssh
-customize
+msg_info "Setting up MOTD"
+cat <<EOF >/etc/motd
+
+  Bitfocus Companion ${RELEASE}
+  ─────────────────────────────────────────
+  Web UI:  http://$(hostname -I | awk '{print $1}'):8000
+  Config:  /opt/companion-config
+  Service: systemctl status companion
+
+  Script by glabutis
+  https://github.com/glabutis/companion-proxmox
+
+EOF
+msg_ok "MOTD configured"

@@ -14,7 +14,8 @@ msg_info "Installing Dependencies"
 apt-get install -y -q \
   curl \
   ca-certificates \
-  tar >/dev/null 2>&1
+  tar \
+  libusb-1.0-0 >/dev/null 2>&1
 msg_ok "Installed Dependencies"
 
 msg_info "Fetching Latest Bitfocus Companion Release Info"
